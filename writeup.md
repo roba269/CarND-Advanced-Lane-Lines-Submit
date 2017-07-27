@@ -19,7 +19,9 @@ The goals / steps of this project are the following:
 [binary_thresholded]: ./output_images/binary_thresholded.png "Binary Thresholded"
 [warped]: ./output_images/warped.png "Warped"
 [warped_binary]: ./output_images/warped_binary.png "Warped Binary"
-[video1]: ./project_video_output.mp4 "Video"
+[fitted]: ./output_images/fitted.png "Fitted"
+[result]: ./output_images/result.png "Result"
+[video1]: ./project_video_result.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -92,19 +94,43 @@ Here is the warped binary-thresholded image:
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+I mostly copied the code from the course material - basically find the peaks of left and right halves of the histogram as starting points of lane lines, then use 9 sliding windows to get all pixels of lanes, then fit the pixels with 2nd order polynomials. The code is at the cell 11 of IPython notebook. 
 
-![alt text][image5]
+Here is the result (pixels of two lanes are colored as red and blue, and the yellow curve lines are the fitted polynomials): 
+
+![fitted][fitted]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+I did it at the bottom part of cell 11 of IPython notebook:
+
+```python
+    # Define conversions in x and y from pixels space to meters
+    ym_per_pix = 30/720 # meters per pixel in y dimension
+    xm_per_pix = 3.7/700 # meters per pixel in x dimension
+    y_eval = np.max(ploty)
+
+    # Fit new polynomials to x,y in world space
+    left_fit_cr = np.polyfit(lefty*ym_per_pix, leftx*xm_per_pix, 2)
+    right_fit_cr = np.polyfit(righty*ym_per_pix, rightx*xm_per_pix, 2)
+    # Calculate the new radii of curvature
+    left_curverad = ((1 + (2*left_fit_cr[0]*y_eval*ym_per_pix + left_fit_cr[1])**2)**1.5) / np.absolute(2*left_fit_cr[0])
+    right_curverad = ((1 + (2*right_fit_cr[0]*y_eval*ym_per_pix + right_fit_cr[1])**2)**1.5) / np.absolute(2*right_fit_cr[0])
+    # Now our radius of curvature is in meters
+    # print(left_curverad, 'm', right_curverad, 'm')
+    
+    left_lane_bottom = left_fit[0]*y_eval**2 + left_fit[1]*y_eval + left_fit[2]
+    right_lane_bottom = right_fit[0]*y_eval**2 + right_fit[1]*y_eval + right_fit[2]
+    distance_from_center = (1280 / 2 - (left_lane_bottom + right_lane_bottom) / 2) * xm_per_pix
+```
+
+The code is following the formulas in course lecture. For the distance_from_center, I calcudated the distance by using the middle point of the image (ie. width of image / 2) minus the middle point of the bottom of detected lanes.
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I implemented this step in cell 13 and 14 in IPython notebook.  Here is an example of my result on the test image:
 
-![alt text][image6]
+![result][result]
 
 ---
 
@@ -112,7 +138,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 #### 1. Provide a link to your final video output. Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video_output.mp4)
+Here's a [link to my video result](./project_video_result.mp4)
 
 ---
 
@@ -120,4 +146,12 @@ Here's a [link to my video result](./project_video_output.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Here are some difficulties that I came across:
+
+1. How to choose the thresholding method. I generated the output of different methods of sample image. Initally I thought just checking the S channel of HLS color space is enough. Later I noticed it works well on most cases, but it will fail on the road with bright color. Then I tried combination of single thresholding to get an acceptable solution for all cases.
+
+2. In perspecitve tranform, how to define the source area. It should be transformed from a trapezoid to a rectangle, but how to find the vertex coordinates of the trapezoid is a little tricky. I opened the straight road image with image edit tool, mark the vertex coordinates manually, then fine tuned them in the code to make the result lanes appear parallel.
+
+3. How to smooth the result between video frames. I noticed sometimes the green area in result video can be wiggle without smoothing. So I added a simple "smoother", as in cell 10 and the middle part of cell 11 in the IPython notebook. Basically the smoother will remember the latest 5 valid frames and return the average of the fitted lines every time. The result is considered as valid if the curvature radius of two lanes don't have significant difference.
+
+I think my pipeline fail when there are very sharp turns, because the sliding window method seesm assume the lanes are mostly vertical. And also I think the thresholding method may not work very well when there are complicated shadow patterns on the road (like in the forest).
