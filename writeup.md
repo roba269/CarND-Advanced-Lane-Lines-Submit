@@ -13,20 +13,13 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[chessboard]: ./output/chessboard.png "Chessboard"
+[chessboard]: ./output_images/chessboard.png "Chessboard"
 [original]: ./test_images/test2.jpg "Sample Image"
-[undistorted]: ./output/undistorted.png "Undistorted"
-[binary_thresholded]: ./output/binary_thresholded.png "Binary Thresholded"
-[warped]: ./output/warped.png "Warped"
-[warped_binary]: ./output/warped_binary.png "Warped Binary"
-
-[image1]: ./examples/undistort_output.png "Undistorted"
-[image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[undistorted]: ./output_images/undistorted.png "Undistorted"
+[binary_thresholded]: ./output_images/binary_thresholded.png "Binary Thresholded"
+[warped]: ./output_images/warped.png "Warped"
+[warped_binary]: ./output_images/warped_binary.png "Warped Binary"
+[video1]: ./project_video_output.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -119,7 +112,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 #### 1. Provide a link to your final video output. Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./project_video_output.mp4)
 
 ---
 
