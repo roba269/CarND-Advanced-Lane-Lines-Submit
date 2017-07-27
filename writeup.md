@@ -52,9 +52,11 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 #### 1. Provide an example of a distortion-corrected image.
 
 I will use this example image below for the all following pipeline steps:
+
 ![original][original]
 
 After undistortion:
+
 ![undistorted][undistorted]
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
