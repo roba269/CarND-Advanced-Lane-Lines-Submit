@@ -156,4 +156,6 @@ Here are some difficulties that I came across:
 
 3. How to smooth the result between video frames. I noticed sometimes the green area in result video can be wiggle without smoothing. So I added a simple "smoother", as in cell 10 and the middle part of cell 11 in the IPython notebook. Basically the smoother will remember the latest 5 valid frames and return the average of the fitted lines every time. The result is considered as valid if the curvature radius of two lanes don't have significant difference.
 
-I think my pipeline fail when there are very sharp turns, because the sliding window method seesm assume the lanes are mostly vertical. And also I think the thresholding method may not work very well when there are complicated shadow patterns on the road (like in the forest).
+I think my pipeline may fail when there are very sharp turns, because the sliding window method seesm assume the lanes are mostly vertical. And also I think the thresholding method may not work very well when there are complicated shadow patterns on the road (like in the forest).
+
+For further improvements, I think more sophisticated thresholding method can be used for difficult shadow patterns. And we may need better smoothing to handle the bad cases in which the lane can't be detected. As suggested by pervious reviewer, side by side visualization like this video https://www.youtube.com/watch?v=WaxAbRy258A can be very helpful for debugging.
